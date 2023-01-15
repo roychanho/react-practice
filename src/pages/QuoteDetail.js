@@ -1,15 +1,11 @@
-import React, { Fragment, useEffect } from "react";
-import { Link, Route, useParams, useRouteMatch } from "react-router-dom";
-import Comments from "../components/comments/Comments";
-import HighlightedQuote from "../components/quotes/HighlightedQuote";
-import LoadingSpinner from "../components/UI/LoadingSpinner";
-import useHttp from "../hooks/use-http";
-import { getSingleQuote } from "../lib/api";
+import { Fragment, useEffect } from 'react';
+import { useParams, Route, Link, useRouteMatch } from 'react-router-dom';
 
-// const DUMMY_QUOTES = [
-//   { id: "q1", author: "Max", text: "Learning React is fun!" },
-//   { id: "q2", author: "Maximilian", text: "Learning React is great!" },
-// ];
+import HighlightedQuote from '../components/quotes/HighlightedQuote';
+import Comments from '../components/comments/Comments';
+import useHttp from '../hooks/use-http';
+import { getSingleQuote } from '../lib/api';
+import LoadingSpinner from '../components/UI/LoadingSpinner';
 
 const QuoteDetail = () => {
   const match = useRouteMatch();
@@ -17,29 +13,25 @@ const QuoteDetail = () => {
 
   const { quoteId } = params;
 
-  const {
-    sendRequest,
-    status,
-    data: loadedQuote,
-    error,
-  } = useHttp(getSingleQuote, true);
+  const { sendRequest, status, data: loadedQuote, error } = useHttp(
+    getSingleQuote,
+    true
+  );
 
   useEffect(() => {
-    sendRequest();
+    sendRequest(quoteId);
   }, [sendRequest, quoteId]);
 
-  // const quote = DUMMY_QUOTES.find((quote) => quote.id === params.quoteId);
-
-  if (status === "pending") {
+  if (status === 'pending') {
     return (
-      <div className="centered">
+      <div className='centered'>
         <LoadingSpinner />
       </div>
     );
   }
 
   if (error) {
-    return <p className="centered">{error}</p>
+    return <p className='centered'>{error}</p>;
   }
 
   if (!loadedQuote.text) {
@@ -49,10 +41,9 @@ const QuoteDetail = () => {
   return (
     <Fragment>
       <HighlightedQuote text={loadedQuote.text} author={loadedQuote.author} />
-      {/* nested routes */}
       <Route path={match.path} exact>
-        <div className="centered">
-          <Link className="btn--flat" to={`${match.url}/comments`}>
+        <div className='centered'>
+          <Link className='btn--flat' to={`${match.url}/comments`}>
             Load Comments
           </Link>
         </div>
